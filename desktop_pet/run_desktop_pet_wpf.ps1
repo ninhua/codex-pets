@@ -1,5 +1,5 @@
 param(
-    [double]$Scale = 1.0,
+    [double]$Scale = 0.6,
     [switch]$Center,
     [switch]$ShowTaskbar,
     [switch]$DebugChrome
@@ -20,6 +20,8 @@ $FrameCacheRoot = Join-Path $ScriptDir "cache\frames"
 
 $FrameWidth = 192
 $FrameHeight = 208
+$DefaultScale = 0.6
+$ScaleOptions = @(0.5, 0.6, 0.75, 1.0, 1.25, 1.5, 2.0)
 $AnimationStates = [ordered]@{
     "idle" = @{ Label = "Idle"; Row = 0; Frames = 6; Durations = @(280, 110, 110, 140, 140, 320) }
     "running-right" = @{ Label = "Run right"; Row = 1; Frames = 8; Durations = @(120, 120, 120, 120, 120, 120, 120, 220) }
@@ -125,8 +127,43 @@ function Save-Selection {
     $payload = [ordered]@{
         source = $Pet.Source
         id = $Pet.Id
+        scale = $script:CurrentScale
     }
     $payload | ConvertTo-Json | Set-Content -LiteralPath $ConfigPath -Encoding UTF8
+}
+
+function Normalize-Scale {
+    param([object]$Value)
+
+    try {
+        $candidate = [double]$Value
+    } catch {
+        return $DefaultScale
+    }
+
+    if ($candidate -le 0) {
+        return $DefaultScale
+    }
+
+    $nearest = $ScaleOptions[0]
+    $nearestDistance = [Math]::Abs($candidate - $nearest)
+    foreach ($option in $ScaleOptions) {
+        $distance = [Math]::Abs($candidate - $option)
+        if ($distance -lt $nearestDistance) {
+            $nearest = $option
+            $nearestDistance = $distance
+        }
+    }
+    return $nearest
+}
+
+function Get-InitialScale {
+    $config = Get-JsonObject $ConfigPath
+    if (-not $PSBoundParameters.ContainsKey("Scale") -and $config -and $config.scale) {
+        return Normalize-Scale $config.scale
+    }
+
+    return Normalize-Scale $Scale
 }
 
 function Get-PythonRuntime {
@@ -261,8 +298,8 @@ $Window.WindowStyle = [System.Windows.WindowStyle]::None
 $Window.AllowsTransparency = $true
 $Window.Background = if ($DebugChrome) { [System.Windows.Media.Brushes]::DeepSkyBlue } else { [System.Windows.Media.Brushes]::Transparent }
 $Window.Topmost = $true
-$Window.Width = $FrameWidth * $Scale
-$Window.Height = $FrameHeight * $Scale
+$Window.Width = $FrameWidth * $CurrentScale
+$Window.Height = $FrameHeight * $CurrentScale
 $Window.ShowInTaskbar = [bool]$ShowTaskbar
 $Window.ResizeMode = [System.Windows.ResizeMode]::NoResize
 
@@ -270,7 +307,7 @@ $Image = New-Object System.Windows.Controls.Image
 $Image.Width = $FrameWidth
 $Image.Height = $FrameHeight
 $Image.Stretch = [System.Windows.Media.Stretch]::None
-$Image.LayoutTransform = New-Object System.Windows.Media.ScaleTransform $Scale, $Scale
+$Image.LayoutTransform = New-Object System.Windows.Media.ScaleTransform $CurrentScale, $CurrentScale
 
 if ($DebugChrome) {
     $Border = New-Object System.Windows.Controls.Border
@@ -288,6 +325,7 @@ $Image.ContextMenu = $ContextMenu
 
 $FrameIndex = 0
 $Frames = $null
+$CurrentScale = Get-InitialScale
 $CurrentState = "idle"
 $ReturnToIdleAfterLoop = $false
 $MenuOpen = $false
@@ -304,6 +342,27 @@ function Set-CurrentPet {
     $script:Window.Title = "$($Pet.DisplayName) Desktop Pet"
     Save-Selection -Pet $Pet
     Set-AnimationState -State "waving" -Once $true
+    Update-ContextMenu
+}
+
+function Set-PetScale {
+    param([double]$NewScale)
+
+    $newScale = Normalize-Scale $NewScale
+    $centerX = $script:Window.Left + ($script:Window.Width / 2)
+    $centerY = $script:Window.Top + ($script:Window.Height / 2)
+
+    $script:CurrentScale = $newScale
+    $script:Window.Width = $FrameWidth * $newScale
+    $script:Window.Height = $FrameHeight * $newScale
+    $script:Image.LayoutTransform = New-Object System.Windows.Media.ScaleTransform $newScale, $newScale
+
+    $maxLeft = [System.Windows.SystemParameters]::PrimaryScreenWidth - $script:Window.Width
+    $maxTop = [System.Windows.SystemParameters]::PrimaryScreenHeight - $script:Window.Height
+    $script:Window.Left = [Math]::Min([Math]::Max(0, $centerX - ($script:Window.Width / 2)), $maxLeft)
+    $script:Window.Top = [Math]::Min([Math]::Max(0, $centerY - ($script:Window.Height / 2)), $maxTop)
+
+    Save-Selection -Pet $script:CurrentPet
     Update-ContextMenu
 }
 
@@ -378,6 +437,23 @@ function Update-ContextMenu {
 
     $separator = New-Object System.Windows.Controls.Separator
     $script:ContextMenu.Items.Add($separator) | Out-Null
+
+    $scaleMenu = New-Object System.Windows.Controls.MenuItem
+    $scaleMenu.Header = "Scale"
+    foreach ($scaleOption in $ScaleOptions) {
+        $scaleItem = New-Object System.Windows.Controls.MenuItem
+        $percent = [int]($scaleOption * 100)
+        $prefix = if ([Math]::Abs($scaleOption - $script:CurrentScale) -lt 0.001) { "[current] " } else { "" }
+        $codexLabel = if ([Math]::Abs($scaleOption - $DefaultScale) -lt 0.001) { " (Codex-like)" } else { "" }
+        $scaleItem.Header = "$prefix$percent%$codexLabel"
+        $scaleItem.Tag = $scaleOption
+        $scaleItem.Add_Click({
+            param($sender, $eventArgs)
+            Set-PetScale -NewScale ([double]$sender.Tag)
+        })
+        $scaleMenu.Items.Add($scaleItem) | Out-Null
+    }
+    $script:ContextMenu.Items.Add($scaleMenu) | Out-Null
 
     $actions = New-Object System.Windows.Controls.MenuItem
     $actions.Header = "Codex-like state"
