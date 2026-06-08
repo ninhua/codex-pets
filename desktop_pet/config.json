@@ -1,5 +1,6 @@
 ﻿{
     "source":  "codex",
     "id":  "liuying",
-    "scale":  0.6
+    "scale":  0.6,
+    "contextMode":  "low"
 }

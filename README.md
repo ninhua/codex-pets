@@ -94,3 +94,10 @@ uv run --with pillow python -m unittest discover -s tests
 仓库地址：
 
 https://github.com/ninhua/codex-pets
+
+## TODO
+
+- 后续考虑接入 Codex 状态信息，但当前版本暂不实现。
+  - 首选方案：增加本地状态桥，例如 `desktop_pet/status.json`，由外部脚本或未来 Codex 集成写入 `idle`、`running`、`waiting`、`review`、`failed` 等状态，桌宠只负责监听并切换动画。
+  - 备选方案：研究 Codex App Server / JSON-RPC 是否有稳定、公开、可授权的状态接口。
+  - 不推荐方案：通过进程名、窗口标题或日志内容猜测 Codex 状态，因为容易误判且版本升级后容易失效。
