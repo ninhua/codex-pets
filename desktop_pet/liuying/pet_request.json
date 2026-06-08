@@ -1,0 +1,247 @@
+{
+  "pet_id": "liuying",
+  "display_name": "\u6d41\u8424",
+  "description": "Tiny elegant chibi anime girl assistant with silver-white lavender hair, cyan-pink-violet eyes, teal leaf accessory, black ribbon, and black-white academy uniform with teal and gold accents.",
+  "created_at": "2026-06-08T13:57:54.661398+00:00",
+  "atlas": {
+    "columns": 8,
+    "rows": 9,
+    "cell_width": 192,
+    "cell_height": 208,
+    "width": 1536,
+    "height": 1872
+  },
+  "rows": [
+    {
+      "state": "idle",
+      "row": 0,
+      "frames": 6,
+      "purpose": "calm resting, breathing, and blinking loop"
+    },
+    {
+      "state": "running-right",
+      "row": 1,
+      "frames": 8,
+      "purpose": "rightward drag movement loop"
+    },
+    {
+      "state": "running-left",
+      "row": 2,
+      "frames": 8,
+      "purpose": "leftward drag movement loop"
+    },
+    {
+      "state": "waving",
+      "row": 3,
+      "frames": 4,
+      "purpose": "greeting or attention gesture"
+    },
+    {
+      "state": "jumping",
+      "row": 4,
+      "frames": 5,
+      "purpose": "hover or playful jump"
+    },
+    {
+      "state": "failed",
+      "row": 5,
+      "frames": 8,
+      "purpose": "blocked, failed, or cancelled reaction"
+    },
+    {
+      "state": "waiting",
+      "row": 6,
+      "frames": 6,
+      "purpose": "waiting for approval, help, or user input"
+    },
+    {
+      "state": "running",
+      "row": 7,
+      "frames": 6,
+      "purpose": "active task work or processing"
+    },
+    {
+      "state": "review",
+      "row": 8,
+      "frames": 6,
+      "purpose": "ready or completed output review"
+    }
+  ],
+  "layout_guides": [
+    {
+      "state": "idle",
+      "path": "references\\layout-guides\\idle.png",
+      "width": 1152,
+      "height": 208,
+      "frames": 6,
+      "cell_width": 192,
+      "cell_height": 208,
+      "safe_margin_x": 18,
+      "safe_margin_y": 16,
+      "usage": "layout guide input only; do not copy visible guide lines into generated sprite strips"
+    },
+    {
+      "state": "running-right",
+      "path": "references\\layout-guides\\running-right.png",
+      "width": 1536,
+      "height": 208,
+      "frames": 8,
+      "cell_width": 192,
+      "cell_height": 208,
+      "safe_margin_x": 18,
+      "safe_margin_y": 16,
+      "usage": "layout guide input only; do not copy visible guide lines into generated sprite strips"
+    },
+    {
+      "state": "running-left",
+      "path": "references\\layout-guides\\running-left.png",
+      "width": 1536,
+      "height": 208,
+      "frames": 8,
+      "cell_width": 192,
+      "cell_height": 208,
+      "safe_margin_x": 18,
+      "safe_margin_y": 16,
+      "usage": "layout guide input only; do not copy visible guide lines into generated sprite strips"
+    },
+    {
+      "state": "waving",
+      "path": "references\\layout-guides\\waving.png",
+      "width": 768,
+      "height": 208,
+      "frames": 4,
+      "cell_width": 192,
+      "cell_height": 208,
+      "safe_margin_x": 18,
+      "safe_margin_y": 16,
+      "usage": "layout guide input only; do not copy visible guide lines into generated sprite strips"
+    },
+    {
+      "state": "jumping",
+      "path": "references\\layout-guides\\jumping.png",
+      "width": 960,
+      "height": 208,
+      "frames": 5,
+      "cell_width": 192,
+      "cell_height": 208,
+      "safe_margin_x": 18,
+      "safe_margin_y": 16,
+      "usage": "layout guide input only; do not copy visible guide lines into generated sprite strips"
+    },
+    {
+      "state": "failed",
+      "path": "references\\layout-guides\\failed.png",
+      "width": 1536,
+      "height": 208,
+      "frames": 8,
+      "cell_width": 192,
+      "cell_height": 208,
+      "safe_margin_x": 18,
+      "safe_margin_y": 16,
+      "usage": "layout guide input only; do not copy visible guide lines into generated sprite strips"
+    },
+    {
+      "state": "waiting",
+      "path": "references\\layout-guides\\waiting.png",
+      "width": 1152,
+      "height": 208,
+      "frames": 6,
+      "cell_width": 192,
+      "cell_height": 208,
+      "safe_margin_x": 18,
+      "safe_margin_y": 16,
+      "usage": "layout guide input only; do not copy visible guide lines into generated sprite strips"
+    },
+    {
+      "state": "running",
+      "path": "references\\layout-guides\\running.png",
+      "width": 1152,
+      "height": 208,
+      "frames": 6,
+      "cell_width": 192,
+      "cell_height": 208,
+      "safe_margin_x": 18,
+      "safe_margin_y": 16,
+      "usage": "layout guide input only; do not copy visible guide lines into generated sprite strips"
+    },
+    {
+      "state": "review",
+      "path": "references\\layout-guides\\review.png",
+      "width": 1152,
+      "height": 208,
+      "frames": 6,
+      "cell_width": 192,
+      "cell_height": 208,
+      "safe_margin_x": 18,
+      "safe_margin_y": 16,
+      "usage": "layout guide input only; do not copy visible guide lines into generated sprite strips"
+    }
+  ],
+  "references": [
+    {
+      "path": "F:\\\u8d44\u6e90\\Projects\\Codex pets\\desktop_pet\\liuying\\references\\reference-01.jpg",
+      "width": 2560,
+      "height": 1080,
+      "mode": "RGB",
+      "format": "JPEG",
+      "source_path": "D:\\sysytem files\\Documents\\xwechat_files\\wxid_ra2iw2xtdqvc22_8b28\\temp\\RWTemp\\2026-06\\9c772abd5693f500db6e9e12093e08c0\\ba8c9d56633c43b4632483e07e73e5b3.jpg",
+      "copied_path": "F:\\\u8d44\u6e90\\Projects\\Codex pets\\desktop_pet\\liuying\\references\\reference-01.jpg"
+    },
+    {
+      "path": "F:\\\u8d44\u6e90\\Projects\\Codex pets\\desktop_pet\\liuying\\references\\reference-02.jpg",
+      "width": 1152,
+      "height": 2048,
+      "mode": "RGB",
+      "format": "JPEG",
+      "source_path": "D:\\sysytem files\\Documents\\xwechat_files\\wxid_ra2iw2xtdqvc22_8b28\\temp\\RWTemp\\2026-06\\9c772abd5693f500db6e9e12093e08c0\\e0242253ffb8e24e4c9fbda315ffed44.jpg",
+      "copied_path": "F:\\\u8d44\u6e90\\Projects\\Codex pets\\desktop_pet\\liuying\\references\\reference-02.jpg"
+    },
+    {
+      "path": "F:\\\u8d44\u6e90\\Projects\\Codex pets\\desktop_pet\\liuying\\references\\reference-03.jpg",
+      "width": 2400,
+      "height": 1080,
+      "mode": "RGB",
+      "format": "JPEG",
+      "source_path": "D:\\sysytem files\\Documents\\xwechat_files\\wxid_ra2iw2xtdqvc22_8b28\\temp\\RWTemp\\2026-06\\9c772abd5693f500db6e9e12093e08c0\\72283afe66ddb7c5eac61a9a7728ccff.jpg",
+      "copied_path": "F:\\\u8d44\u6e90\\Projects\\Codex pets\\desktop_pet\\liuying\\references\\reference-03.jpg"
+    },
+    {
+      "path": "F:\\\u8d44\u6e90\\Projects\\Codex pets\\desktop_pet\\liuying\\references\\reference-04.png",
+      "width": 5120,
+      "height": 2880,
+      "mode": "RGBA",
+      "format": "PNG",
+      "source_path": "D:\\sysytem files\\Documents\\xwechat_files\\wxid_ra2iw2xtdqvc22_8b28\\temp\\RWTemp\\2026-06\\9c772abd5693f500db6e9e12093e08c0\\79db27b5530a2a8bbd4cedc7def50464.png",
+      "copied_path": "F:\\\u8d44\u6e90\\Projects\\Codex pets\\desktop_pet\\liuying\\references\\reference-04.png"
+    },
+    {
+      "path": "F:\\\u8d44\u6e90\\Projects\\Codex pets\\desktop_pet\\liuying\\references\\reference-05.jpg",
+      "width": 7680,
+      "height": 4320,
+      "mode": "RGB",
+      "format": "JPEG",
+      "source_path": "D:\\sysytem files\\Documents\\xwechat_files\\wxid_ra2iw2xtdqvc22_8b28\\temp\\RWTemp\\2026-06\\9c772abd5693f500db6e9e12093e08c0\\5f8833408b3f3ecc3d0d2817be34c042.jpg",
+      "copied_path": "F:\\\u8d44\u6e90\\Projects\\Codex pets\\desktop_pet\\liuying\\references\\reference-05.jpg"
+    }
+  ],
+  "chroma_key": {
+    "hex": "#00FF00",
+    "rgb": [
+      0,
+      255,
+      0
+    ],
+    "name": "green",
+    "selection": "auto",
+    "score": 204.83
+  },
+  "pet_notes": "Use all five uploaded references for character identity only. Preserve silver-white hair with pale lavender shadows, long flowing side ponytail, soft loose strands, black headband with small angular teal ornament, translucent teal leaf hair accessory on one side, small black ribbon bow, large dreamy cyan-pink-violet-blue gradient eyes, warm gentle smile, compact elegant chibi full body. Outfit: refined black and white fantasy academy uniform, dark cropped jacket, gold buttons and tiny gold trim, white ruffled collar, black ribbon tie, bright teal pendant-like chest strips, layered dark skirt or dress shape, white frill edges, teal accent details. Do not copy backgrounds, mecha, city, fireworks, sparkles, watermarks, UID text, other characters, scenery, logos, UI, shadows, glow, motion blur, or detached effects.",
+  "style_preset": "auto",
+  "style_notes": "High-quality anime chibi desktop pet sprite, soft cel shading, polished game mascot style, clean line art, oversized head and tiny body, readable compact silhouette, centered full-body poses inside 192x208 cells, flat removable chroma-key background, transparent-background-ready.",
+  "style_contract": "Pet-safe sprite: compact full-body mascot, readable in a 192x208 cell, clear silhouette, simple face, stable palette/materials, and crisp edges for chroma-key extraction. Style `auto`: Infer the most appropriate pet-safe style from the user request and reference images, then keep that exact style consistent across every row. User style notes: High-quality anime chibi desktop pet sprite, soft cel shading, polished game mascot style, clean line art, oversized head and tiny body, readable compact silhouette, centered full-body poses inside 192x208 cells, flat removable chroma-key background, transparent-background-ready..",
+  "brand_name": "",
+  "brand_brief": "",
+  "brand_sources": [],
+  "pet_safe_style": "Pet-safe sprite: compact full-body mascot, readable in a 192x208 cell, clear silhouette, simple face, stable palette/materials, and crisp edges for chroma-key extraction.",
+  "primary_generation_skill": "$imagegen"
+}
