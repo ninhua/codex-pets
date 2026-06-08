@@ -166,6 +166,16 @@ function Get-InitialScale {
     return Normalize-Scale $Scale
 }
 
+function Get-WindowWidthForScale {
+    param([double]$Value)
+    return [Math]::Max($FrameWidth, $FrameWidth * $Value)
+}
+
+function Get-WindowHeightForScale {
+    param([double]$Value)
+    return [Math]::Max($FrameHeight, $FrameHeight * $Value)
+}
+
 function Get-PythonRuntime {
     $candidates = @()
     $localPython = Join-Path $ScriptDir ".venv\Scripts\python.exe"
@@ -298,8 +308,8 @@ $Window.WindowStyle = [System.Windows.WindowStyle]::None
 $Window.AllowsTransparency = $true
 $Window.Background = if ($DebugChrome) { [System.Windows.Media.Brushes]::DeepSkyBlue } else { [System.Windows.Media.Brushes]::Transparent }
 $Window.Topmost = $true
-$Window.Width = $FrameWidth * $CurrentScale
-$Window.Height = $FrameHeight * $CurrentScale
+$Window.Width = Get-WindowWidthForScale $CurrentScale
+$Window.Height = Get-WindowHeightForScale $CurrentScale
 $Window.ShowInTaskbar = [bool]$ShowTaskbar
 $Window.ResizeMode = [System.Windows.ResizeMode]::NoResize
 
@@ -308,20 +318,29 @@ $Image.Width = $FrameWidth
 $Image.Height = $FrameHeight
 $Image.Stretch = [System.Windows.Media.Stretch]::None
 $Image.LayoutTransform = New-Object System.Windows.Media.ScaleTransform $CurrentScale, $CurrentScale
+$Image.HorizontalAlignment = [System.Windows.HorizontalAlignment]::Center
+$Image.VerticalAlignment = [System.Windows.VerticalAlignment]::Center
+
+$PetSurface = New-Object System.Windows.Controls.Grid
+$PetSurface.Width = $Window.Width
+$PetSurface.Height = $Window.Height
+$PetSurface.Background = [System.Windows.Media.Brushes]::Transparent
+$PetSurface.Children.Add($Image) | Out-Null
 
 if ($DebugChrome) {
     $Border = New-Object System.Windows.Controls.Border
     $Border.BorderBrush = [System.Windows.Media.Brushes]::Red
     $Border.BorderThickness = New-Object System.Windows.Thickness 4
     $Border.Background = [System.Windows.Media.Brushes]::DeepSkyBlue
-    $Border.Child = $Image
+    $Border.Child = $PetSurface
     $Window.Content = $Border
 } else {
-    $Window.Content = $Image
+    $Window.Content = $PetSurface
 }
 
 $ContextMenu = New-Object System.Windows.Controls.ContextMenu
 $Image.ContextMenu = $ContextMenu
+$PetSurface.ContextMenu = $ContextMenu
 
 $FrameIndex = 0
 $Frames = $null
@@ -353,8 +372,10 @@ function Set-PetScale {
     $centerY = $script:Window.Top + ($script:Window.Height / 2)
 
     $script:CurrentScale = $newScale
-    $script:Window.Width = $FrameWidth * $newScale
-    $script:Window.Height = $FrameHeight * $newScale
+    $script:Window.Width = Get-WindowWidthForScale $newScale
+    $script:Window.Height = Get-WindowHeightForScale $newScale
+    $script:PetSurface.Width = $script:Window.Width
+    $script:PetSurface.Height = $script:Window.Height
     $script:Image.LayoutTransform = New-Object System.Windows.Media.ScaleTransform $newScale, $newScale
 
     $maxLeft = [System.Windows.SystemParameters]::PrimaryScreenWidth - $script:Window.Width
@@ -508,7 +529,7 @@ function Update-ContextMenu {
     $script:ContextMenu.Items.Add($exit) | Out-Null
 }
 
-$Image.Add_MouseLeftButtonDown({
+$PetMouseHandler = {
     param($sender, $eventArgs)
     if ($eventArgs.ClickCount -ge 2) {
         Set-AnimationState -State "waving" -Once $true
@@ -525,7 +546,10 @@ $Image.Add_MouseLeftButtonDown({
             Set-AnimationState -State "idle"
         }
     }
-})
+}
+
+$Image.Add_MouseLeftButtonDown($PetMouseHandler)
+$PetSurface.Add_MouseLeftButtonDown($PetMouseHandler)
 
 $ContextMenu.Add_Opened({
     $script:MenuOpen = $true
