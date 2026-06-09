@@ -510,6 +510,7 @@ $ChatHistoryBox = $null
 $ChatInputBox = $null
 $ChatTranscript = New-Object System.Collections.Generic.List[object]
 $SettingsWindow = $null
+$SettingsControls = @{}
 $MouseWasNear = $false
 $MouseNearSince = $null
 $LastMouseX = $null
@@ -1645,50 +1646,71 @@ function Show-SettingsWindow {
     $buttonPanel.Children.Add($saveButton) | Out-Null
     $root.Children.Add($buttonPanel) | Out-Null
 
+    $script:SettingsControls = @{
+        AiEnabled = $aiEnabledBox
+        ApiKey = $apiBox
+        Endpoint = $endpointBox
+        Model = $modelBox
+        Mouse = $mouseBox
+        Messages = $messageBox
+        Context = $contextBox
+        Scale = $scaleBox
+        Pet = $petBox
+    }
+
     $cancelButton.Add_Click({
         if ($script:SettingsWindow) {
             $script:SettingsWindow.Close()
         }
     })
     $saveButton.Add_Click({
-        $script:AiEnabled = [bool]$aiEnabledBox.IsChecked
-        $script:AiApiKey = $apiBox.Password.Trim()
-        if (-not [string]::IsNullOrWhiteSpace($endpointBox.Text)) {
-            $script:AiEndpoint = $endpointBox.Text.Trim()
-        }
-        if (-not [string]::IsNullOrWhiteSpace($modelBox.Text)) {
-            $script:AiModel = $modelBox.Text.Trim()
-        }
-        $script:MouseSenseEnabled = [bool]$mouseBox.IsChecked
-        $script:MessagesEnabled = [bool]$messageBox.IsChecked
-        if (-not $script:MessagesEnabled) {
-            $script:BubbleBorder.Visibility = [System.Windows.Visibility]::Collapsed
-            $script:BubbleTimer.Stop()
-        }
-        if ($contextBox.SelectedItem) {
-            $script:ContextMode = [string]$contextBox.SelectedItem.Tag
-            $script:LastContextSignature = ""
-        }
-        if ($scaleBox.SelectedItem) {
-            Set-PetScale -NewScale ([double]$scaleBox.SelectedItem.Tag)
-        }
-        if ($petBox.SelectedItem) {
-            $selectedPet = $petBox.SelectedItem.Tag
-            if ($selectedPet.Source -ne $script:CurrentPet.Source -or $selectedPet.Id -ne $script:CurrentPet.Id) {
-                Set-CurrentPet -Pet $selectedPet
+        try {
+            $controls = $script:SettingsControls
+            $script:AiEnabled = [bool]$controls.AiEnabled.IsChecked
+            $script:AiApiKey = $controls.ApiKey.Password.Trim()
+            if (-not [string]::IsNullOrWhiteSpace($controls.Endpoint.Text)) {
+                $script:AiEndpoint = $controls.Endpoint.Text.Trim()
             }
-        }
-        Save-Selection -Pet $script:CurrentPet
-        Update-ContextMenu
-        Show-PetMessage -Text "设置已保存"
-        if ($script:SettingsWindow) {
-            $script:SettingsWindow.Close()
+            if (-not [string]::IsNullOrWhiteSpace($controls.Model.Text)) {
+                $script:AiModel = $controls.Model.Text.Trim()
+            }
+            $script:MouseSenseEnabled = [bool]$controls.Mouse.IsChecked
+            $script:MessagesEnabled = [bool]$controls.Messages.IsChecked
+            if (-not $script:MessagesEnabled) {
+                $script:BubbleBorder.Visibility = [System.Windows.Visibility]::Collapsed
+                $script:BubbleTimer.Stop()
+            }
+            if ($controls.Context.SelectedItem) {
+                $script:ContextMode = [string]$controls.Context.SelectedItem.Tag
+                $script:LastContextSignature = ""
+            }
+            if ($controls.Scale.SelectedItem) {
+                Set-PetScale -NewScale ([double]$controls.Scale.SelectedItem.Tag)
+            }
+            if ($controls.Pet.SelectedItem) {
+                $selectedPet = $controls.Pet.SelectedItem.Tag
+                if ($selectedPet.Source -ne $script:CurrentPet.Source -or $selectedPet.Id -ne $script:CurrentPet.Id) {
+                    Set-CurrentPet -Pet $selectedPet
+                }
+            }
+            Save-Selection -Pet $script:CurrentPet
+            Update-ContextMenu
+            Show-PetMessage -Text "设置已保存"
+            [System.Windows.MessageBox]::Show("设置已保存。", "桌宠设置") | Out-Null
+            if ($script:SettingsWindow) {
+                $script:SettingsWindow.Close()
+            }
+        } catch {
+            [System.Windows.MessageBox]::Show("保存失败：$($_.Exception.Message)", "桌宠设置") | Out-Null
         }
     })
 
     $settings.Content = $scroll
     $script:SettingsWindow = $settings
-    $settings.Add_Closed({ $script:SettingsWindow = $null })
+    $settings.Add_Closed({
+        $script:SettingsWindow = $null
+        $script:SettingsControls = @{}
+    })
     $settings.Show()
 }
 
@@ -1967,6 +1989,7 @@ try {
     Write-DesktopPetError $_
     throw
 }
+
 
 
 
