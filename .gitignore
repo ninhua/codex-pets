@@ -7,3 +7,5 @@ __pycache__/
 venv/
 env/
 *.log
+desktop_pet/config.json
+desktop_pet/*.jsonl
